@@ -1,0 +1,37 @@
+{
+  "rollup_vs_state_file_icu_corr": 0.9752957797116002,
+  "rollup_vs_state_file_icu_mean_abs_gap_pts": 2.4023075629510005,
+  "n_hosp_ky": 53,
+  "n_hosp_peers": 494,
+  "ky_side_xcorr_best_lag_weeks": 0,
+  "ky_side_xcorr_at_0": 0.8936865762363189,
+  "ky_side_xcorr_best": 0.8936865762363189,
+  "ky_side_peak_weeks": {
+    "Lexington-side": "2021-09-12",
+    "Louisville-side": "2022-01-09"
+  },
+  "headroom_strained_hospital_weeks": 3187,
+  "headroom_stranded_hospital_weeks": 472,
+  "headroom_stranded_share": 0.14810166300596173,
+  "staffing_best_lag": -2,
+  "staffing_best_corr": 0.4562164021569909,
+  "staffing_corr_lag0": 0.4480008552810166,
+  "staff_peak_share_ky": 0.575,
+  "staff_peak_share_national_median_of_states": 0.38425,
+  "forecast_n_weeks": 139,
+  "forecast_mae_naive_pts": 1.3985409547167262,
+  "forecast_mae_model_pts": 1.4824996217357516,
+  "forecast_mae_gain_pts": -0.08395866701902535,
+  "forecast_gain_ci_pts": [
+    -0.19600579791390535,
+    -0.004254792798798951
+  ],
+  "forecast_surge_weeks": 36,
+  "forecast_mae_naive_surge_pts": 1.4966986859184053,
+  "forecast_mae_model_surge_pts": 1.7791453396978272,
+  "window": [
+    "2020-08-02",
+    "2024-04-21"
+  ],
+  "n_hospitals_total": 877
+}

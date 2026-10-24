@@ -1,0 +1,4 @@
+data_raw/
+dashboard/_chart.umd.js
+__pycache__/
+.DS_Store
