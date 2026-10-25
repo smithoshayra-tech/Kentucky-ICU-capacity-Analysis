@@ -9,5 +9,6 @@ python3 scripts/01_clean.py
 python3 scripts/02_analyze.py
 python3 scripts/03_figures.py
 python3 scripts/05_sql_checks.py
+python3 scripts/06_kpis.py
 # Dashboard rebuild needs dashboard/_chart.umd.js (Chart.js 4.4.1, see README). The built dashboard/index.html is already committed.
 if [ -f dashboard/_chart.umd.js ]; then python3 scripts/04_build_dashboard.py; else echo "Skipping dashboard rebuild (no dashboard/_chart.umd.js)"; fi

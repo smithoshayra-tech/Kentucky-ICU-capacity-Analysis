@@ -42,6 +42,20 @@ Plain reading: Kentucky was not an outlier before Delta, then ran hot in both De
 
 More in `outputs/figures/` (Lexington-side vs Louisville-side, ICU size, staffing vs strain, forecast test).
 
+## KPIs
+
+Six KPIs, each with a written definition in `docs/kpi_definitions.md`: ICU occupancy, strained hospitals (90%+), share of hospitals strained, ICU reporting completeness, critical staffing shortage rate, and the share of strained Kentucky hospital-weeks with no nearby room. The first five are calculated in SQL (`sql/04_kpi_state_week.sql`) and re-calculated in pandas; the script stops if they disagree. A recurring weekly report for the latest week is written to `outputs/weekly_kpi_report.md` (HHS reporting ended April 2024, so it shows the last available week).
+
+## How AI was used, and the controls around it
+
+This project was built with an AI coding assistant (Claude). The assistant drafted the code, thresholds and definitions, and the author reviewed them and is responsible for them. The data is public, aggregate hospital-level reporting with no patient records and no protected health information. Controls:
+
+- Every cleaning decision is logged with rows before, rows after and the reason (`docs/cleaning_log.csv`).
+- Every key result is calculated twice, in SQL and in pandas, and the scripts fail if the results differ.
+- Six alternative versions of the main comparison (other thresholds, hospital types and subsets) are in `outputs/sensitivity.csv`.
+- Assumptions are labeled as assumptions (for example the Kentucky region split), and a negative result (the forecast test) is reported as it came out.
+- Raw data is not redistributed; sources and download steps are listed below. All code is in the repo and reruns from the raw files.
+
 ## Honest limits
 
 - **Data ends April 2024.** This is a look back, not a live monitor. HHS stopped requiring this reporting after that.
@@ -67,7 +81,7 @@ Download these three files into `data_raw/` with these exact names:
 1. **Clean** (`scripts/01_clean.py`, 19 logged steps in `docs/cleaning_log.csv`). Replaced the HHS suppression code -999999 with missing (167,873 values). Kept short-term and critical access hospitals. Required 4 of 7 reporting days. Set occupancy above 150% to missing and kept 100-150% as possible surge beds. Removed 46 isolated one-week spikes that snapped back. Flagged 309 one-off bed-count blips against a local 9-week median. Started the window when ICU reporting became complete (2020-08-02). Joined CMS on the 6-digit CCN (96.6% match).
 2. **Analyze** (`scripts/02_analyze.py`). Weighted state-week occupancy; hospital-level share of weeks at 90%+; bootstrap confidence intervals and permutation tests (numpy only); nearby-headroom metric; staffing lag correlation; rolling-origin forecast test; sensitivity runs for six alternative choices.
 3. **Visualize** (`scripts/03_figures.py`, `scripts/04_build_dashboard.py`). Nine figures in `outputs/figures/` and a self-contained dashboard.
-4. **Verify** (`scripts/05_sql_checks.py`). Loads the cleaned data into SQLite, runs the queries in `sql/`, and asserts they match the pandas results (largest gap about 0.00005). The state-level rollup from hospital data also correlates 0.975 with HHS's own state file.
+4. **Verify and report** (`scripts/05_sql_checks.py`, `scripts/06_kpis.py`). Loads the cleaned data into SQLite, runs the queries in `sql/`, and asserts they match the pandas results (largest gap about 0.00005). The state-level rollup from hospital data also correlates 0.975 with HHS's own state file.
 
 ## Run it
 
@@ -84,9 +98,9 @@ The built `dashboard/index.html` is already included. Rebuilding it needs Chart.
 ```
 data_raw/          you download these (ignored by git)
 data_clean/        cleaned hospital-week and state-week files
-docs/              cleaning_log.csv, data_dictionary.md
-scripts/           01 clean, 02 analyze, 03 figures, 04 dashboard, 05 SQL checks
-sql/               three queries cross-checked against pandas
+docs/              cleaning_log.csv, data_dictionary.md, kpi_definitions.md
+scripts/           01 clean, 02 analyze, 03 figures, 04 dashboard, 05 SQL checks, 06 KPIs and weekly report
+sql/               four queries cross-checked against pandas
 outputs/           result tables, headline_facts.json, figures/
 tableau_extracts/  flat files for Tableau or Power BI
 dashboard/         index.html
@@ -94,6 +108,6 @@ dashboard/         index.html
 
 ## Skills shown
 
-SQL and pandas cross-validation, data cleaning with a documented decision log, outlier handling, confidence intervals and permutation tests, sensitivity analysis, time-series evaluation against a naive baseline, geographic analysis, dashboard design, and plain reporting of limits and a negative result.
+KPI definition and a recurring weekly report, SQL and pandas cross-validation, data cleaning with a documented decision log, outlier handling, confidence intervals and permutation tests, sensitivity analysis, time-series evaluation against a naive baseline, geographic analysis, dashboard design, and plain reporting of limits and a negative result.
 
 Data: HHS and CMS public data. Not affiliated with the University of Kentucky or any health system.
